@@ -1,97 +1,40 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:projeto_perguntas/questao.dart';
-import 'package:projeto_perguntas/resposta.dart';
-import 'package:projeto_perguntas/resultado.dart';
+import './questao.dart';
+import './resposta.dart';
 
-class Questionario extends StatefulWidget {
-  const Questionario({super.key});
+class Questionario extends StatelessWidget {
+  final List<Map<String, Object>> perguntas;
+  final int perguntaSelecionada;
+  final void Function(int) quandoResponder;
 
-  @override
-  State<Questionario> createState() => _QuestionarioState();
-}
-
-class _QuestionarioState extends State<Questionario> {
-  var _perguntaSelecionada = 0;
-
-  final List<Map<String, Object>> _perguntas = const [
-    {
-      'texto': 'Qual é a sua cor favorita?',
-      'respostas': [
-        {'texto': 'Preto', 'pontuacao': 10},
-        {'texto': 'Vermelho', 'pontuacao': 5},
-        {'texto': 'Verde', 'pontuacao': 3},
-        {'texto': 'Branco', 'pontuacao': 1},
-      ],
-    },
-    {
-      'texto': 'Qual é o seu animal preferido?',
-      'respostas': [
-        {'texto': 'Coelho', 'pontuacao': 10},
-        {'texto': 'Cobra', 'pontuacao': 5},
-        {'texto': 'Elefante', 'pontuacao': 3},
-        {'texto': 'Leão', 'pontuacao': 1},
-      ],
-    },
-    {
-      'texto': 'Qual é o seu instrutor preferido?',
-      'respostas': [
-        {'texto': 'Maria', 'pontuacao': 10},
-        {'texto': 'João', 'pontuacao': 5},
-        {'texto': 'Leo', 'pontuacao': 3},
-        {'texto': 'Pedro', 'pontuacao': 1}
-      ],
-    },
-  ];
-
-  void _responder() {
-    setState(() {
-      if (_perguntaSelecionada < _perguntas.length) {
-        _perguntaSelecionada++;
-      }
-    });
-  }
-
-  bool get finalizar {
-    return (_perguntaSelecionada >= _perguntas.length);
-  }
+  const Questionario({
+    required this.perguntas,
+    required this.perguntaSelecionada,
+    required this.quandoResponder,
+    super.key,
+  });
 
   bool get temPerguntaSelecionada {
-    return _perguntaSelecionada < _perguntas.length;
+    return perguntaSelecionada < perguntas.length;
   }
 
   @override
   Widget build(BuildContext context) {
+    List<Map<String, Object>> respostas = temPerguntaSelecionada
+        ? perguntas[perguntaSelecionada]['respostas']
+            as List<Map<String, Object>>
+        : [];
 
-    
-    Map<String, Object> resp = _perguntas[_perguntaSelecionada];
-  
-
-    var respostas = resp['respostas'] as List;
-    respostas.map((item) => item as String);
-
-    final listaWidgets = respostas.map((item) {
-      return Resposta(item['texto'] as String, _responder);
-    });
-
-    print('tem pergunta $temPerguntaSelecionada');
-
-    return MaterialApp(
-      home: Scaffold(
-          appBar: AppBar(
-            title: const Text('Perguntas'),
-          ),
-          body: !finalizar
-              ? Column(
-                  children: [
-                    Questao(
-                      _perguntas[_perguntaSelecionada]['texto'].toString(),
-                    ),
-                    ...listaWidgets,
-                  ],
-                )
-              : const Resultado()),
+    return Column(
+      children: [
+        Questao(perguntas[perguntaSelecionada]['texto'] as String),
+        ...respostas.map((resp) {
+          return Resposta(
+            resp['texto'] as String,
+            () => quandoResponder(resp['pontuacao'] as int),
+          );
+        }).toList(),
+      ],
     );
   }
 }
