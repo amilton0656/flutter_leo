@@ -53,6 +53,10 @@ class _QuestionarioState extends State<Questionario> {
     });
   }
 
+  bool get finalizar {
+    return (_perguntaSelecionada >= _perguntas.length);
+  }
+
   bool get temPerguntaSelecionada {
     return _perguntaSelecionada < _perguntas.length;
   }
@@ -60,29 +64,30 @@ class _QuestionarioState extends State<Questionario> {
   @override
   Widget build(BuildContext context) {
 
-    List<String> xx = _perguntas[_perguntaSelecionada]['respostas'];
+    
+    Map<String, Object> resp = _perguntas[_perguntaSelecionada];
+  
 
-    List<String> respostas = temPerguntaSelecionada
-        ? _perguntas[_perguntaSelecionada]['respostas'] 
-        : null;
+    var respostas = resp['respostas'] as List;
+    respostas.map((item) => item as String);
 
     final listaWidgets = respostas.map((item) {
-      // return null;
       return Resposta(item['texto'] as String, _responder);
     });
 
-    // final listaWidgets = [];
+    print('tem pergunta $temPerguntaSelecionada');
 
     return MaterialApp(
       home: Scaffold(
           appBar: AppBar(
             title: const Text('Perguntas'),
           ),
-          body: temPerguntaSelecionada
+          body: !finalizar
               ? Column(
                   children: [
                     Questao(
-                        _perguntas[_perguntaSelecionada]['texto'].toString()),
+                      _perguntas[_perguntaSelecionada]['texto'].toString(),
+                    ),
                     ...listaWidgets,
                   ],
                 )
