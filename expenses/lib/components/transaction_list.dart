@@ -28,16 +28,17 @@ class TransactionList extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                       border: Border.all(
-                    color: Colors.purple,
+                    color: Theme.of(context).primaryColor,
                     width: 2,
                   )),
                   padding: const EdgeInsets.all(10),
                   child: Text(
                     reaisFormatados(tr.value),
-                    style: const TextStyle(
+                    style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: Colors.purple),
+                        color: Theme.of(context).primaryColor,
+                        ),
                   ),
                 ),
                 Column(
