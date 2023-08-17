@@ -28,6 +28,11 @@ class ExpensesApp extends StatelessWidget {
         appBarTheme: const AppBarTheme().copyWith(
           backgroundColor: kColorScheme.onPrimaryContainer,
           foregroundColor: kColorScheme.primaryContainer,
+          titleTextStyle: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+            )
         ),
         cardTheme: const CardTheme().copyWith(
           color: kColorScheme.secondaryContainer,
@@ -36,6 +41,14 @@ class ExpensesApp extends StatelessWidget {
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             backgroundColor: kColorScheme.primaryContainer,
+          ),
+        ),
+
+        textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(
+            textStyle:TextStyle(
+              color: kColorScheme.onPrimary,
+            ),
           ),
         ),
 
@@ -103,7 +116,11 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Despesas Pessoais'),
+        title: Text('Despesas Pessoais',
+          style: Theme.of(context).appBarTheme.titleTextStyle,
+          
+          
+        ),
         actions: [
           IconButton(
             onPressed: () => _openTransactionFormModal(context),
