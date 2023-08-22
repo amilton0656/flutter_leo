@@ -18,6 +18,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         appBarTheme: Theme.of(context).appBarTheme.copyWith(
           backgroundColor: Colors.blue[900],
+          foregroundColor: Colors.white,
         ),
         useMaterial3: true,
       ),

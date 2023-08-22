@@ -16,7 +16,10 @@ class ProductsOverviewPage extends StatelessWidget {
         title: const Text('Minha Loja'),
       ),
       body: GridView.builder(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 5,
+          vertical: 7,
+        ),
         itemCount: loadedProducts.length,
         itemBuilder: (ctx, index) => ProductItem(product: loadedProducts[index]),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
