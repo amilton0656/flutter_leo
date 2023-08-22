@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:shop/data/dummy_data.dart';
+import 'package:shop/pages/product_detail_page.dart';
 import 'package:shop/pages/products_overview_page.dart';
+import 'package:shop/providers/product_list_provider.dart';
+import 'package:shop/utils/app_routes.dart';
+import 'package:provider/provider.dart';
+
+import 'models/cart.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,19 +16,37 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final loaded = dummyProducts;
-    return MaterialApp(
-      title: 'Shop',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        appBarTheme: Theme.of(context).appBarTheme.copyWith(
-          backgroundColor: Colors.blue[900],
-          foregroundColor: Colors.white,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => ProductListProvider(),
         ),
-        useMaterial3: true,
+        ChangeNotifierProvider(
+          create: (_) => Cart(),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'Shop',
+        theme: ThemeData(
+          fontFamily: 'Lato',
+          colorScheme: const ColorScheme.light().copyWith(
+            primary: Colors.blue[900],
+            secondary: Colors.orange,
+            tertiary: Colors.grey,
+          ),
+          appBarTheme: Theme.of(context).appBarTheme.copyWith(
+            backgroundColor: Colors.blue[900],
+            foregroundColor: Colors.white,
+          ),
+          useMaterial3: true,
+        ),
+          home: ProductsOverviewPage(),
+          routes: {
+             AppRoutes.PRODUCT_DETAIL: (ctx) => ProductDetailPage()
+            // AppRoutes.PRODUCT_DETAIL: (ctx) => ProductDetailPage()
+          },
+          debugShowCheckedModeBanner: false,
       ),
-        home: ProductsOverviewPage(loaded),
-      debugShowCheckedModeBanner: false,
     );
   }
 }
