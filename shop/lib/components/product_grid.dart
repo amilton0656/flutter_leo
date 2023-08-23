@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../models/product.dart';
 import '../providers/product_list_provider.dart';
-import 'product_item.dart';
+import 'product_grid_item.dart';
 
 class ProductGrid extends StatelessWidget {
   const ProductGrid(this.showFavoriteOnly, {super.key});
@@ -22,7 +22,7 @@ class ProductGrid extends StatelessWidget {
         itemCount: loadedProducts.length,
         itemBuilder: (ctx, index) => ChangeNotifierProvider.value(
               value: loadedProducts[index],
-              child: ProductItem(),
+              child: ProductGridItem(),
             ),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,

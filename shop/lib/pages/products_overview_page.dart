@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop/components/app_drawer.dart';
 import 'package:shop/components/badgee.dart';
-import 'package:shop/providers/product_list_provider.dart';
+import 'package:shop/utils/app_routes.dart';
 
 import '../components/product_grid.dart';
+import '../models/cart.dart';
 
 enum FilterOptions {
   Favorite,
@@ -36,12 +38,12 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
             icon: const Icon(Icons.more_vert),
             itemBuilder: (_) => [
               const PopupMenuItem(
-                child: Text('Somente Favoritos'),
                 value: FilterOptions.Favorite,
+                child: Text('Somente Favoritos'),
               ),
               const PopupMenuItem(
-                child: Text('Todos'),
                 value: FilterOptions.All,
+                child: Text('Todos'),
               )
             ],
             onSelected: (FilterOptions selectedValue) {
@@ -54,17 +56,21 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
               });
             },
           ),
-          Badgee(
-            value: '2',
-            color: Colors.black,
-            child: IconButton(
-              onPressed: (){}, 
-              icon: Icon(Icons.shopping_cart),
+          Consumer<Cart>(
+            builder: (ctx, cart, child) => Badgee(
+              value: cart.itemsCount.toString(),
+              child: IconButton(
+                onPressed: () {
+                  Navigator.of(context).pushNamed(AppRoutes.CART);
+                },
+                icon: const Icon(Icons.shopping_cart),
               ),
+            ),
           )
         ],
       ),
       body: ProductGrid(_showFavoriteOnly),
+      drawer: AppDrawer(),
     );
   }
 }
