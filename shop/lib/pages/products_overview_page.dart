@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop/components/badgee.dart';
 import 'package:shop/providers/product_list_provider.dart';
 
 import '../components/product_grid.dart';
@@ -52,6 +53,14 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
                 }
               });
             },
+          ),
+          Badgee(
+            value: '2',
+            color: Colors.black,
+            child: IconButton(
+              onPressed: (){}, 
+              icon: Icon(Icons.shopping_cart),
+              ),
           )
         ],
       ),
