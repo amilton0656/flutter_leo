@@ -1,5 +1,5 @@
-import 'package:crud/despesa_form.dart';
 import 'package:crud/despesa_provider.dart';
+import 'package:crud/despesas_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,8 +16,7 @@ class DespesasList extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => DespesaForm()));
+              Navigator.of(context).pushNamed(DespesasRoutes.DESPESA_FORM);
             },
             icon: const Icon(Icons.add),
           )
@@ -36,11 +35,19 @@ class DespesasList extends StatelessWidget {
               child: Row(
                 children: [
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(
+                        DespesasRoutes.DESPESA_FORM,
+                        arguments: despesas[index],
+                      );
+                    },
                     icon: const Icon(Icons.edit),
                   ),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Provider.of<DespesasProvider>(context, listen: false)
+                          .removeDespesa(despesas[index]);
+                    },
                     icon: const Icon(Icons.delete),
                   ),
                 ],
