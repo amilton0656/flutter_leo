@@ -17,7 +17,7 @@ class DespesasList extends StatelessWidget {
           IconButton(
             onPressed: () {
               Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const DespesaForm()));
+                  MaterialPageRoute(builder: (context) => DespesaForm()));
             },
             icon: const Icon(Icons.add),
           )

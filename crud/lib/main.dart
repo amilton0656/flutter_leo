@@ -5,16 +5,18 @@ import 'package:crud/despesas_list.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp(MaterialApp(
-    home: MultiProvider(
+  runApp(MultiProvider(
       providers: [
         ChangeNotifierProvider(
           create: (_) => DespesasProvider(),
         ),
       ],
-      child: const DespesasList(),
-      ),
-  ));
+    
+    child: MaterialApp(
+      home: DespesasList(),
+        ),
+  ),
+  );
 }
 
 //flutter pub add provider

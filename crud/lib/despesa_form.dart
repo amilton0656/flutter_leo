@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 // import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+
+import 'package:crud/despesa_provider.dart';
 
 class DespesaForm extends StatefulWidget {
   const DespesaForm({super.key});
@@ -12,8 +15,11 @@ class _DespesaFormState extends State<DespesaForm> {
   final _formKey = GlobalKey<FormState>();
   final _formData = Map<String, Object>();
 
-  void onSubmitForm() {
-    print(_formData['descricao']);
+  onSubmitForm() {
+    _formKey.currentState?.save();
+    Provider.of<DespesasProvider>(context, listen: false).saveDespesa(_formData);
+    
+    Navigator.of(context).pop();
   }
 
   @override
