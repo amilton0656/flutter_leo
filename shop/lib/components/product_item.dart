@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop/exceptions/http_exception.dart';
 import 'package:shop/providers/product_list_provider.dart';
 import 'package:shop/utils/app_routes.dart';
 
@@ -12,6 +13,7 @@ class ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final msg = ScaffoldMessenger.of(context);
     return ListTile(
       leading: CircleAvatar(
         backgroundImage: NetworkImage(product.imageUrl),
@@ -32,34 +34,42 @@ class ProductItem extends StatelessWidget {
               color: Theme.of(context).primaryColor,
             ),
             IconButton(
+              icon: const Icon(Icons.delete),
+              color: Theme.of(context).colorScheme.error,
               onPressed: () {
-                showDialog(
+                showDialog<bool>(
                   context: context,
                   builder: (ctx) => AlertDialog(
-                    title: const Text('Excluir produto'),
+                    title: const Text('Excluir Produto'),
                     content: const Text('Tem certeza?'),
                     actions: [
                       TextButton(
-                        onPressed: () => Navigator.of(ctx).pop(),
                         child: const Text('Não'),
+                        onPressed: () => Navigator.of(ctx).pop(false),
                       ),
                       TextButton(
-                        onPressed: () {
-                          Provider.of<ProductListProvider>(
-                            context,
-                            listen: false,
-                            )
-                              .removeProduct(product);
-                          Navigator.of(ctx).pop();
-                        },
                         child: const Text('Sim'),
-                      )
+                        onPressed: () => Navigator.of(ctx).pop(true),
+                      ),
                     ],
                   ),
-                );
+                ).then((value) async {
+                  if (value ?? false) {
+                    try {
+                      await Provider.of<ProductListProvider>(
+                        context,
+                        listen: false,
+                      ).removeProduct(product);
+                    } on HttpExceptioN catch (error) {
+                      msg.showSnackBar(
+                        SnackBar(
+                          content: Text(error.toString()),
+                        ),
+                      );
+                    }
+                  }
+                });
               },
-              icon: const Icon(Icons.delete),
-              color: Theme.of(context).colorScheme.error,
             ),
           ],
         ),
@@ -67,3 +77,23 @@ class ProductItem extends StatelessWidget {
     );
   }
 }
+
+/*
+.then((value) async {
+                  if (value ?? false) {
+                    try {
+                      await Provider.of<ProductListProvider>(
+                        context,
+                        listen: false,
+                      ).removeProduct(product);
+                    } on HttpExceptioN catch (error) {
+                      msg.showSnackBar(
+                        SnackBar(
+                          content: Text(error.toString()),
+                        ),
+                      );
+                    }
+                  }
+                });
+
+*/

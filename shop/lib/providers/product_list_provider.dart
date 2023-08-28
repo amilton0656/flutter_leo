@@ -1,15 +1,17 @@
 import 'dart:convert';
+// import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shop/exceptions/http_exception.dart';
 
 import '../models/product.dart';
+import '../utils/constants.dart';
 
 //https://www.cota.com.br/docs/produto1.jpg
 
 class ProductListProvider with ChangeNotifier {
-  final _baseUrl =
-      'https://shop-leo-d1b89-default-rtdb.firebaseio.com/products';
+
   List<Product> _items = [];
 
   List<Product> get items => [..._items];
@@ -22,7 +24,7 @@ class ProductListProvider with ChangeNotifier {
 
   Future<void> loadProduct() async {
     _items.clear();
-    final response = await http.get(Uri.parse('$_baseUrl.json'));
+    final response = await http.get(Uri.parse('${Constants.PRODUCTS_BASE_URL}.json'));
 
     if (response.body == 'null') {
       return;
@@ -63,7 +65,7 @@ class ProductListProvider with ChangeNotifier {
 
   Future<void> addProduct(Product product) async {
     final response = await http.post(
-      Uri.parse('$_baseUrl.json'),
+      Uri.parse('${Constants.PRODUCTS_BASE_URL}.json'),
       body: jsonEncode(
         {
           "name": product.name,
@@ -95,7 +97,7 @@ class ProductListProvider with ChangeNotifier {
     if (index >= 0) {
 
       await http.patch(
-      Uri.parse('$_baseUrl/${product.id}.json'),
+      Uri.parse('${Constants.PRODUCTS_BASE_URL}/${product.id}.json'),
       body: jsonEncode(
         {
           "name": product.name,
@@ -114,12 +116,27 @@ class ProductListProvider with ChangeNotifier {
     return Future.value();
   }
 
-  void removeProduct(Product product) {
+  Future<void> removeProduct(Product product) async {
     int index = _items.indexWhere((p) => p.id == product.id);
 
     if (index >= 0) {
-      _items.removeWhere((p) => p.id == product.id);
+      final product = _items[index];
+      _items.remove(product);
       notifyListeners();
+
+      final response = await http.delete(
+      Uri.parse('${Constants.PRODUCTS_BASE_URL}/${product.id}.json'),
+      );
+
+      if (response.statusCode >= 400) {
+        _items.insert(index, product);
+        notifyListeners();
+        throw HttpExceptioN(
+          msg: 'Não foi possível excluir o produto.',
+          statusCode: response.statusCode,
+        );
+      }
+
     }
   }
 }

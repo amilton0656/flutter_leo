@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:shop/models/auth.dart';
 import 'package:shop/models/order_list.dart';
+import 'package:shop/pages/auth_page.dart';
 import 'package:shop/pages/order_page.dart';
 import 'package:shop/pages/product_detail_page.dart';
 import 'package:shop/pages/product_form_page.dart';
@@ -32,6 +34,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => OrderList(),
         ),
+         ChangeNotifierProvider(
+          create: (_) => Auth(),
+        ),
       ],
       child: MaterialApp(
         title: 'Shop',
@@ -43,21 +48,28 @@ class MyApp extends StatelessWidget {
             tertiary: Colors.grey,
           ),
           appBarTheme: Theme.of(context).appBarTheme.copyWith(
-            backgroundColor: Colors.blue[900],
-            foregroundColor: Colors.white,
+                backgroundColor: Colors.blue[900],
+                foregroundColor: Colors.white,
+              ),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue[900],
+              foregroundColor: Colors.white,
+            ),
           ),
           useMaterial3: true,
         ),
-          // home: ProductsOverviewPage(),
-          routes: {
-            AppRoutes.HOME: (ctx) => ProductsOverviewPage(),
-            AppRoutes.PRODUCT_DETAIL: (ctx) => ProductDetailPage(),
-            AppRoutes.CART: (ctx) => CartPage(),
-            AppRoutes.ORDERS: (ctx) => OrderPage(),
-            AppRoutes.PRODUCTS: (ctx) => ProductsPage(),
-            AppRoutes.PRODUCT_FORM: (ctx) => ProductFormPage(),
-          },
-          debugShowCheckedModeBanner: false,
+        // home: ProductsOverviewPage(),
+        routes: {
+          AppRoutes.AUTH: (ctx) => AuthPage(),
+          AppRoutes.HOME: (ctx) => ProductsOverviewPage(),
+          AppRoutes.PRODUCT_DETAIL: (ctx) => ProductDetailPage(),
+          AppRoutes.CART: (ctx) => CartPage(),
+          AppRoutes.ORDERS: (ctx) => OrderPage(),
+          AppRoutes.PRODUCTS: (ctx) => ProductsPage(),
+          AppRoutes.PRODUCT_FORM: (ctx) => ProductFormPage(),
+        },
+        debugShowCheckedModeBanner: false,
       ),
     );
   }
