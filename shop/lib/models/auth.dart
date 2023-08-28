@@ -33,7 +33,7 @@ class Auth with ChangeNotifier {
 
   Future<void> _authenticate(
       String email, String password, String urlFragment) async {
-    const chave = 'AIzaSyCGHvJvh5GIqIgv1bmkg3cX1o9WDcNKtTQ';
+    const chave = 'AIzaSyCGHvJvh5GIqIgvAJR1bmkg3cX1o9WDcNKtTQ';
     final url =
         'https://identitytoolkit.googleapis.com/v1/accounts:$urlFragment?key=$chave';
 
