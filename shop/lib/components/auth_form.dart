@@ -26,7 +26,8 @@ class _AuthFormState extends State<AuthForm>
   };
 
   AnimationController? _controller;
-  Animation<Size>? _heightAnimation;
+  Animation<double>? _opacityAnimation;
+  // Animation<Size>? _heightAnimation;
 
   @override
   void initState() {
@@ -38,13 +39,21 @@ class _AuthFormState extends State<AuthForm>
       ),
     );
 
-    _heightAnimation = Tween(
-      begin: Size(double.infinity, 300),
-      end: Size(double.infinity, 400),
+    _opacityAnimation = Tween(
+      begin: 0.0,
+      end: 1.0,
     ).animate(CurvedAnimation(
       parent: _controller!,
       curve: Curves.linear,
     ));
+
+    // _heightAnimation = Tween(
+    //   begin: Size(double.infinity, 300),
+    //   end: Size(double.infinity, 400),
+    // ).animate(CurvedAnimation(
+    //   parent: _controller!,
+    //   curve: Curves.linear,
+    // ));
 
     // _heightAnimation?.addListener(() => setState(() {}));
   }
@@ -56,7 +65,7 @@ class _AuthFormState extends State<AuthForm>
   }
 
   bool _isLogin() => _authMode == AuthMode.Login;
-  bool _isSignup() => _authMode == AuthMode.Signup;
+  // bool _isSignup() => _authMode == AuthMode.Signup;
 
   bool isValid = false;
 
@@ -130,16 +139,14 @@ class _AuthFormState extends State<AuthForm>
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
-      child: AnimatedBuilder(
-        animation: _heightAnimation!,
-        builder: (ctx, childForm) => Container(
+      child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeIn,
           padding: const EdgeInsets.all(16),
-          // height: _isLogin() ? 310 : 400,
-          height: _heightAnimation?.value.height ?? (_isLogin() ? 310 : 400),
+          height: _isLogin() ? 310 : 400,
+          // height: _heightAnimation?.value.height ?? (_isLogin() ? 310 : 400),
           width: deviceSize.width * 0.75,
-          child: childForm
-        ),
-        child:  Form(
+          child: Form(
               key: _formKey,
               child: Column(
                 children: [
@@ -177,22 +184,33 @@ class _AuthFormState extends State<AuthForm>
                     obscureText: true,
                     keyboardType: TextInputType.emailAddress,
                   ),
-                  if (_isSignup())
-                    TextFormField(
-                      validator: _isLogin()
-                          ? null
-                          : (_password) {
-                              final password = _password ?? '';
-                              if (password != _passwordController.text) {
-                                return 'Senhas não conferem.';
-                              }
-                              return null;
-                            },
-                      decoration: const InputDecoration(
-                        labelText: 'Confirme a Senha',
+                  // if (_isSignup())
+                    AnimatedContainer(
+                      constraints: BoxConstraints(
+                        minHeight: _isLogin() ? 0 : 60,
+                        maxHeight: _isLogin() ? 0 : 120,
                       ),
-                      obscureText: true,
-                      keyboardType: TextInputType.emailAddress,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.linear,
+                      child: FadeTransition(
+                        opacity: _opacityAnimation!,
+                        child: TextFormField(
+                          validator: _isLogin()
+                              ? null
+                              : (_password) {
+                                  final password = _password ?? '';
+                                  if (password != _passwordController.text) {
+                                    return 'Senhas não conferem.';
+                                  }
+                                  return null;
+                                },
+                          decoration: const InputDecoration(
+                            labelText: 'Confirme a Senha',
+                          ),
+                          obscureText: true,
+                          keyboardType: TextInputType.emailAddress,
+                        ),
+                      ),
                     ),
                   const SizedBox(
                     height: 20,
